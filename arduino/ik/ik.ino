@@ -46,7 +46,7 @@ static const float center_to_shoulder = 5.753f;  // cm
 //static const float effector_to_wrist = 2.0f;
 
 
-static const int time_on_button=100; //ms
+static const int time_on_button=300; //ms
 
 //------------------------------------------------------------------------------
 // includes
@@ -425,12 +425,13 @@ void getCoordinatesFromText(char* ptr, Point* targetpoint){
     case 'X': xx=atof(ptr+1);  Serial.print('x'); Serial.println(xx); break;
     case 'Y': yy=atof(ptr+1);  Serial.print('y'); Serial.println(yy); break;
     case 'Z': zz=atof(ptr+1);  Serial.print('z'); Serial.println(zz); break;
+    case '&': break;
     default: ptr=0; break;
     }
   }
-  //DIRTY HACK:  X and Y axis are both reversed somehow, so let's just flip it here
+  //DIRTY HACK:  X axis is reversed somehow, so let's just flip it here
   targetpoint->x=-xx;
-  targetpoint->y=-yy;
+  targetpoint->y=yy;
   targetpoint->z=zz;
 }
 
@@ -531,9 +532,46 @@ void liftEffector() {
             liftvalue); //what's the def h for?
 }
 
+void directMove(Point targetpoint){
+  rawMove(targetpoint.x,targetpoint.y,targetpoint.z);
+}
+
 void moveToPoint(Point targetpoint) {
   
+  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
+  delay(150);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z);
+ // delay(100);
+//  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
+}
+
+void enterPin(){
+  Point temppoint;
+  char* ptr=buffer;
+  ptr=strchr(ptr,'&');
+  
+  while (ptr != NULL){
+  
+    getCoordinatesFromText(ptr + 1, &temppoint);
+    
+    moveToPoint(temppoint);
+    
+    delay(500);
+    
+    ptr=strchr(ptr + 1,'&');
+  }
+}
+
+
+void directMoveCommand(){
+  //Find the first space
+  char* ptr=buffer;
+  ptr=strchr(ptr,' ');
+  
+  Point temppoint;
+  getCoordinatesFromText(ptr, &temppoint);
+  
+  directMove(temppoint);
 
 }
 
@@ -586,14 +624,16 @@ void processCommand() {
       //Find the first space
       moveToPoint(retrievePoint());
       delay (time_on_button);
-      dropEffector();
-      delay(time_on_button);
-      liftEffector();
-  } else if (! strncmp(buffer, "MV",2)) {
+     // dropEffector();
+     // delay(time_on_button);
+     // liftEffector();
+  } else if (! strncmp(buffer, "EP", 2)){
+    enterPin();
+  
+  }else if (! strncmp(buffer, "MV",2)) {
     moveCommand();
-
-      
-      
+  } else if(! strncmp(buffer, "DM", 2)){
+    directMoveCommand();
   } else if( !strncmp(buffer,"G00",3) || !strncmp(buffer,"G01",3) ) {
     // line
     float xx=robot.ee.pos.x;
