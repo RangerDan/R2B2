@@ -69,6 +69,8 @@ float feed_rate=10;  // how fast the tool moves in cm/s
 float liftvalue=0;
 float dropvalue=-2;
 
+int reverse=0;
+
 #define LISTSIZE 10
 Point pointlist[LISTSIZE];
 Point zeropoint;
@@ -218,6 +220,10 @@ void ik() {
     if( ( arm.elbow.relative | temp ) < 0 ) x=-x;
 
     float new_angle=atan2(-y,x) * RAD2DEG;
+    if (reverse){
+      new_angle=180-new_angle;
+    }
+    
     // cap the angle
     if(new_angle>90) new_angle=90;
     //if (new_angle>MAX_ANGLE) new_angle=MAX_ANGLE;
@@ -588,6 +594,10 @@ void moveCommand()
   
 }
 
+void reverser()
+{
+  reverse=!reverse;
+}
 
 
 /**
@@ -634,6 +644,8 @@ void processCommand() {
     moveCommand();
   } else if(! strncmp(buffer, "DM", 2)){
     directMoveCommand();
+  } else if(! strncmp(buffer, "RV",2)){
+   reverser(); 
   } else if( !strncmp(buffer,"G00",3) || !strncmp(buffer,"G01",3) ) {
     // line
     float xx=robot.ee.pos.x;
