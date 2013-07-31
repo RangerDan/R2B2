@@ -547,8 +547,8 @@ void moveToPoint(Point targetpoint) {
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
   delay(150);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z);
- // delay(100);
-//  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
+  delay(100);
+  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
 }
 
 void enterPin(){
