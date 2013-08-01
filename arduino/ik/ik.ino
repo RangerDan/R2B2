@@ -542,13 +542,18 @@ void directMove(Point targetpoint){
   rawMove(targetpoint.x,targetpoint.y,targetpoint.z);
 }
 
-void moveToPoint(Point targetpoint) {
-  
-  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
-  delay(150);
+void bounceToPoint(Point targetpoint){
+  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
+  delay(200);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z);
-  delay(100);
-  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + .6);
+  delay(200);
+  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
+}
+
+void moveToPoint(Point targetpoint) {
+  rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
+  delay(200);
+  rawMove(targetpoint.x, targetpoint.y, targetpoint.z);  
 }
 
 void enterPin(){
@@ -579,6 +584,17 @@ void directMoveCommand(){
   
   directMove(temppoint);
 
+}
+
+void bounceCommand(){
+  //Find the first space
+  char* ptr=buffer;
+  ptr=strchr(ptr,' ');
+  
+  Point temppoint;
+  getCoordinatesFromText(ptr, &temppoint);
+  
+  bounceToPoint(temppoint);
 }
 
 void moveCommand()
@@ -640,6 +656,8 @@ void processCommand() {
   } else if (! strncmp(buffer, "EP", 2)){
     enterPin();
   
+  }else if(!strncmp(buffer,"BM",2)){
+    bounceCommand();
   }else if (! strncmp(buffer, "MV",2)) {
     moveCommand();
   } else if(! strncmp(buffer, "DM", 2)){
