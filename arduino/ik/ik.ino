@@ -221,7 +221,7 @@ void ik() {
 
     float new_angle=atan2(-y,x) * RAD2DEG;
     if (reverse){
-      new_angle=180-new_angle;
+      new_angle=-new_angle;
     }
     
     // cap the angle
@@ -544,9 +544,9 @@ void directMove(Point targetpoint){
 
 void bounceToPoint(Point targetpoint){
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
-  delay(200);
+  delay(100);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z);
-  delay(200);
+  delay(100);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
 }
 
