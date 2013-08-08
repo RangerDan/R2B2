@@ -540,13 +540,14 @@ void liftEffector() {
 
 void directMove(Point targetpoint){
   rawMove(targetpoint.x,targetpoint.y,targetpoint.z);
+  delay(50);
 }
 
 void bounceToPoint(Point targetpoint){
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
-  delay(100);
+  delay(150);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z);
-  delay(100);
+  delay(150);
   rawMove(targetpoint.x, targetpoint.y, targetpoint.z + 1);
 }
 
