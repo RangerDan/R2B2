@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // R2B2 - Reconfigurable Robotic Button Basher
-// Modifications - justin@isecpartners.com
+// Modifications - justin@isecpartners.com, Paul Vines
 // Original - dan@marginallycelver.com 2011-06-21
 //------------------------------------------------------------------------------
 // Copyright at end of file.
